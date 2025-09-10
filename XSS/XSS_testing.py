@@ -3,9 +3,6 @@ import re
 import requests
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
-# ---------------------------
-# Payloads
-# ---------------------------
 XSS_PAYLOADS = [
     "<script>alert(1)</script>",
     "<img src=x onerror=alert(1)>",
@@ -15,10 +12,6 @@ XSS_PAYLOADS = [
 # Regex patterns to detect reflected payloads
 REFLECT_PATTERNS = [re.compile(re.escape(p), re.IGNORECASE) for p in XSS_PAYLOADS]
 
-
-# ---------------------------
-# Utility functions
-# ---------------------------
 def get_session():
     """Returns a configured requests session with common headers."""
     session = requests.Session()
@@ -39,10 +32,6 @@ def rebuild_url(parsed, params):
     new_query = urlencode(params, doseq=True)
     return urlunparse(parsed._replace(query=new_query))
 
-
-# ---------------------------
-# Scanner Class
-# ---------------------------
 class XSSScanner:
     def __init__(self, base_url, cookies=None, timeout=5):
         self.base_url = base_url
@@ -58,7 +47,7 @@ class XSSScanner:
         params = extract_params(url)
 
         if not params:
-            return  # No query parameters
+            return  
 
         for param in params:
             for payload in XSS_PAYLOADS:
@@ -92,12 +81,8 @@ class XSSScanner:
         self.test_params(self.base_url)
         return self.findings
 
-
-# ---------------------------
-# Example Usage (DVWA)
-# ---------------------------
 if __name__ == "__main__":
-    # Example: Reflected XSS in DVWA
+    #  Reflected XSS in DVWA
     target_url = "http://localhost/dvwa/vulnerabilities/xss_r/?name=test"
 
     # Update with your DVWA session cookies
@@ -112,3 +97,4 @@ if __name__ == "__main__":
     print("\n--- Scan Results ---")
     for finding in results:
         print(finding)
+
