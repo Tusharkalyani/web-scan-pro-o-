@@ -1,0 +1,18 @@
+[
+  {
+    "type": "passive_candidate_observed",
+    "candidate": {
+      "type": "form",
+      "url": "http://localhost/setup.php",
+      "param": "user_token",
+      "method": "POST",
+      "value": "5fc1fbe3eed0b30fa1c8e258c904d1ce"
+    },
+    "status": 200,
+    "length": 4075
+  },
+  {
+    "type": "skipped_active",
+    "reason": "AUTHORIZATION_CONFIRMED=False; active checks not run"
+  }
+]
